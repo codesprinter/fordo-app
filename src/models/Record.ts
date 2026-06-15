@@ -9,6 +9,7 @@ export interface IItem {
 
 export interface IRecord extends Document {
   user_id: mongoose.Types.ObjectId;
+  family_id: mongoose.Types.ObjectId;
   title: string;
   date: Date;
   description?: string;
@@ -26,6 +27,7 @@ const ItemSchema = new Schema<IItem>({
 
 const RecordSchema = new Schema<IRecord>({
   user_id: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  family_id: { type: Schema.Types.ObjectId, ref: 'Family', required: true },
   title: { type: String, required: true },
   date: { type: Date, required: true },
   description: { type: String },

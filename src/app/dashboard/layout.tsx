@@ -1,7 +1,7 @@
 import { auth, signOut } from "@/auth";
 import { redirect } from "next/navigation";
 import Link from 'next/link';
-import { LogOut, ShoppingBasket } from 'lucide-react';
+import { LogOut, ShoppingBasket, Users } from 'lucide-react';
 
 export default async function DashboardLayout({
   children,
@@ -25,6 +25,10 @@ export default async function DashboardLayout({
               </Link>
             </div>
             <div className="flex items-center gap-4">
+              <Link href="/dashboard/family" className="text-slate-300 hover:text-emerald-400 transition-colors flex items-center gap-2 text-sm font-medium">
+                <Users size={18} />
+                <span className="hidden sm:block">Family</span>
+              </Link>
               <span className="text-sm font-medium text-slate-300 hidden sm:block">
                 {session?.user?.name}
               </span>

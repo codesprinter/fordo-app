@@ -6,6 +6,7 @@ export interface IUser extends Document {
   name: string;
   role: string;
   is_active: boolean;
+  family_id?: mongoose.Types.ObjectId;
   created_at: Date;
   updated_at: Date;
 }
@@ -16,6 +17,7 @@ const UserSchema = new Schema<IUser>({
   name: { type: String, required: true },
   role: { type: String, default: 'user' },
   is_active: { type: Boolean, default: true },
+  family_id: { type: Schema.Types.ObjectId, ref: 'Family' },
 }, {
   timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }
 });

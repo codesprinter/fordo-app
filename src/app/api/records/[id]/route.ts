@@ -10,12 +10,14 @@ export async function GET(
   try {
     const { id } = await params;
     const session = await auth();
-    if (!session?.user?.id) {
+    // @ts-ignore
+    const family_id = session?.user?.family_id;
+    if (!session?.user?.id || !family_id) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
     await connectMongo();
-    const record = await Record.findOne({ _id: id, user_id: session.user.id });
+    const record = await Record.findOne({ _id: id, family_id });
 
     if (!record) {
       return NextResponse.json({ message: "Record not found" }, { status: 404 });
@@ -34,7 +36,9 @@ export async function PUT(
   try {
     const { id } = await params;
     const session = await auth();
-    if (!session?.user?.id) {
+    // @ts-ignore
+    const family_id = session?.user?.family_id;
+    if (!session?.user?.id || !family_id) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
@@ -44,7 +48,7 @@ export async function PUT(
     
     // the updates could contain items array, e.g. when expanding or toggling status
     const record = await Record.findOneAndUpdate(
-      { _id: id, user_id: session.user.id },
+      { _id: id, family_id },
       { $set: updates },
       { new: true } // return updated record
     );
@@ -66,12 +70,14 @@ export async function DELETE(
   try {
     const { id } = await params;
     const session = await auth();
-    if (!session?.user?.id) {
+    // @ts-ignore
+    const family_id = session?.user?.family_id;
+    if (!session?.user?.id || !family_id) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
     await connectMongo();
-    const result = await Record.deleteOne({ _id: id, user_id: session.user.id });
+    const result = await Record.deleteOne({ _id: id, family_id });
 
     if (result.deletedCount === 0) {
       return NextResponse.json({ message: "Record not found" }, { status: 404 });

@@ -6,14 +6,16 @@ import { auth } from '@/auth';
 export async function GET(req: Request) {
   try {
     const session = await auth();
-    if (!session?.user?.id) {
+    // @ts-ignore
+    const family_id = session?.user?.family_id;
+    if (!session?.user?.id || !family_id) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
     await connectMongo();
     
-    // Fetch all records for the logged in user, sort descending by date
-    const records = await Record.find({ user_id: session.user.id }).sort({ date: -1 });
+    // Fetch all records for the family
+    const records = await Record.find({ family_id }).sort({ date: -1 });
 
     return NextResponse.json(records);
   } catch (error: any) {
@@ -24,7 +26,9 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   try {
     const session = await auth();
-    if (!session?.user?.id) {
+    // @ts-ignore
+    const family_id = session?.user?.family_id;
+    if (!session?.user?.id || !family_id) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
@@ -38,6 +42,7 @@ export async function POST(req: Request) {
     
     const newRecord = await Record.create({
       user_id: session.user.id,
+      family_id,
       title,
       description: description || "",
       date: new Date(),
