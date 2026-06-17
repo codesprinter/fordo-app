@@ -7,6 +7,8 @@ export interface IUser extends Document {
   role: string;
   is_active: boolean;
   family_id?: mongoose.Types.ObjectId;
+  reset_password_token?: string;
+  reset_password_expires?: Date;
   created_at: Date;
   updated_at: Date;
 }
@@ -18,6 +20,8 @@ const UserSchema = new Schema<IUser>({
   role: { type: String, default: 'user' },
   is_active: { type: Boolean, default: true },
   family_id: { type: Schema.Types.ObjectId, ref: 'Family' },
+  reset_password_token: { type: String },
+  reset_password_expires: { type: Date },
 }, {
   timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }
 });
